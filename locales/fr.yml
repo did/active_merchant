@@ -1,0 +1,12 @@
+fr:
+  activemerchant:
+    errors:
+      messages:
+        invalid_cc_number: "n'est pas un numéro valide"
+        incorrect_card_type: "n'est pas un type de carte correct"
+        required: "doit être rempli(e)"
+        empty: "doit être rempli(e)"
+        invalid: "n'est pas valide"
+        expired: "est expirée"
+        invalid_month: "n'est pas un mois valide"
+        invalid_year: "n'est pas une année valide"

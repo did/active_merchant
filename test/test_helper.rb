@@ -17,6 +17,8 @@ require 'digest/md5'
 
 require File.dirname(__FILE__) + '/../lib/active_merchant'
 
+I18n.load_path += Dir[File.join(File.dirname(__FILE__), '..', 'locales', '*.{rb,yml}')]
+
 begin
   gem 'actionpack'
 rescue LoadError

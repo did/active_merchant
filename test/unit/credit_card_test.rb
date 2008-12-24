@@ -2,6 +2,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class CreditCardTest < Test::Unit::TestCase
   def setup
+    I18n.default_locale = 'en'
     CreditCard.require_verification_value = false
     @visa = credit_card("4779139500118580",   :type => "visa")
     @solo = credit_card("676700000000000000", :type => "solo", :issue_number => '01')

@@ -118,39 +118,43 @@ module ActiveMerchant #:nodoc:
       end
       
       def validate_card_number #:nodoc:
-        errors.add :number, "is not a valid credit card number" unless CreditCard.valid_number?(number)
+        errors.add :number, error_message(:invalid_cc_number) unless CreditCard.valid_number?(number)
         unless errors.on(:number) || errors.on(:type)
-          errors.add :type, "is not the correct card type" unless CreditCard.matching_type?(number, type)
+          errors.add :type, error_message(:incorrect_card_type) unless CreditCard.matching_type?(number, type)
         end
       end
       
       def validate_card_type #:nodoc:
-        errors.add :type, "is required" if type.blank?
-        errors.add :type, "is invalid"  unless CreditCard.card_companies.keys.include?(type)
+        errors.add :type, error_message(:required) if type.blank?
+        errors.add :type, error_message(:invalid)  unless CreditCard.card_companies.keys.include?(type)
       end
       
       def validate_essential_attributes #:nodoc:
-        errors.add :first_name, "cannot be empty"      if @first_name.blank?
-        errors.add :last_name,  "cannot be empty"      if @last_name.blank?
-        errors.add :month,      "is not a valid month" unless valid_month?(@month)
-        errors.add :year,       "expired"              if expired?
-        errors.add :year,       "is not a valid year"  unless valid_expiry_year?(@year)
+        errors.add :first_name, error_message(:empty)         if @first_name.blank?
+        errors.add :last_name,  error_message(:empty)         if @last_name.blank?
+        errors.add :month,      error_message(:invalid_month) unless valid_month?(@month)
+        errors.add :year,       error_message(:expired)       if expired?
+        errors.add :year,       error_message(:invalid_year)  unless valid_expiry_year?(@year)
       end
       
       def validate_switch_or_solo_attributes #:nodoc:
         if %w[switch solo].include?(type)
           unless valid_month?(@start_month) && valid_start_year?(@start_year) || valid_issue_number?(@issue_number)
-            errors.add :start_month,  "is invalid"      unless valid_month?(@start_month)
-            errors.add :start_year,   "is invalid"      unless valid_start_year?(@start_year)
-            errors.add :issue_number, "cannot be empty" unless valid_issue_number?(@issue_number)
+            errors.add :start_month,  error_message(:invalid)   unless valid_month?(@start_month)
+            errors.add :start_year,   error_message(:invalid)   unless valid_start_year?(@start_year)
+            errors.add :issue_number, error_message(:empty)     unless valid_issue_number?(@issue_number)
           end
         end
       end
       
       def validate_verification_value #:nodoc:
         if CreditCard.requires_verification_value?
-          errors.add :verification_value, "is required" unless verification_value? 
+          errors.add :verification_value, error_message(:empty) unless verification_value? 
         end
+      end
+      
+      def error_message(key)
+        I18n.translate('activemerchant.errors.messages')[key]
       end
     end
   end
